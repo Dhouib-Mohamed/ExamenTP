@@ -5,14 +5,28 @@
 {% endblock %}
 
 {% block body %}
+    <style>
+        #c {
+            margin: 0.2%;
+        }
+    </style>
     <div class="container row">
         {% for entreprise in entreprises %}
-            <div class="card w-50 col-auto">
+            {% if loop.index%2 ==0%}
+            <div class="card w-25 col-auto bg-dark text-white" id="c">
                 <div class="card-body">
                     <h5 class="card-title">{{ entreprise.designation }}</h5>
                     <p class="card-text">{{entreprise.pfeCollection|length}} PFE(s)</p>
                 </div>
             </div>
+            {%else%}
+                <div class="card w-25 col-auto bg-primary text-white" id="c">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ entreprise.designation }}</h5>
+                        <p class="card-text">{{entreprise.pfeCollection|length}} PFE(s)</p>
+                    </div>
+                </div>
+            {%endif%}
         {% endfor %}
     </div>
 
