@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\PFE;
+use App\Form\PFEType;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+#[Route('/pfe')]
+class PFEController extends AbstractController
+{
+    private $manager;
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        $this->manager = $doctrine->getManager();
+    }
+    #[Route('/add', name: 'app_add_pfe')]
+    public function add(Request $request): Response
+    {
+        $pfe = new PFE();
+        $form= $this->createForm (PFEType::class,$pfe);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+                $this->manager->persist($pfe);
+                $this->manager->flush();
+                $this->addFlash("success","The pfe ".$pfe." is successfully added" );
+                return $this->redirectToRoute('print_pfe');}
+        return $this->render('pfe/add.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+    #[Route('/print',name: "print_pfe")]
+    public function print(): Response
+    {
+        $this->addFlash("success","Nombre de Pfe par entreprise" );
+        $result = $this->manager->getRepository("App\Entity\Entreprise")->findAll();
+        return $this->render('pfe/list.html.twig', [
+            'entreprises' => $result,
+        ]);
+    }
+}
