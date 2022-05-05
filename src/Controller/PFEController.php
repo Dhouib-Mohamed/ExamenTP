@@ -27,7 +27,7 @@ class PFEController extends AbstractController
                 $this->manager->persist($pfe);
                 $this->manager->flush();
                 $this->addFlash("success","The pfe ".$pfe." is successfully added" );
-                return $this->redirectToRoute('print_pfe');}
+                return $this->redirectToRoute('print_pfe',["id"=>$pfe->getId()]);}
         return $this->render('pfe/add.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -39,6 +39,14 @@ class PFEController extends AbstractController
         $result = $this->manager->getRepository("App\Entity\Entreprise")->findAll();
         return $this->render('pfe/list.html.twig', [
             'entreprises' => $result,
+        ]);
+    }
+    #[Route('/pfe/{id}',name: "print_pfe")]
+    public function pfe(PFE $pfe): Response
+    {
+
+        return $this->render('pfe/pfe.html.twig', [
+            'pfe' => $pfe,
         ]);
     }
 }
