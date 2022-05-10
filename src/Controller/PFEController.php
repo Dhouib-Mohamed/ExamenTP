@@ -32,7 +32,7 @@ class PFEController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    #[Route('/print',name: "print_pfe")]
+    #[Route('/print',name: "print_pfes")]
     public function print(): Response
     {
         $this->addFlash("success","Nombre de Pfe par entreprise" );
